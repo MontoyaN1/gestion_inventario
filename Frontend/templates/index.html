@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Krona+One|Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css' ) }}">
+
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
+
+    <!-- Meta tags PWA -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="description" content="Tu ecommerce móvil">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+    <!-- Iconos iOS -->
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="512x512" href="{{ url_for('static', filename='icons/icon-512x512.png') }}">
+
+    <!-- Splash screen para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Peluches Yakky">
+
+
+    <!-- Para Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <title>Peluches Yakky | {% block title %} {% endblock %} </title>
+
+
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold me-5" href="/"> <img src="{{ url_for('static', filename='img/icon.png') }}"
+                    alt="Logo" style="width: 3rem; height: 3rem;"> Peluches Yakky</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <form class="d-flex ms-5" role="search" action="/buscar" method="post">
+                    <input class="form-control me-2" name="buscar" type="search" placeholder="Buscar"
+                        aria-label="Buscar">
+                    <button class="btn btn-warning" type="submit">Buscar</button>
+                </form>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/productos-todo">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contacto">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/sobre-nosotros">Sobre Nosotros</a></li>
+
+
+
+                </ul>
+
+                <button id="installBtn" class="btn btn-outline-light ms-2" style="display: none;">
+                    <i class="fas fa-download"></i> Instalar App
+                </button>
+
+
+                {% if cart | length < 1 %} <a href="/carrito" class="btn btn-outline-light ms-3">
+                    <i class="fas fa-shopping-cart"></i> Carrito
+                    </a>
+
+                    {% else %}
+
+                    <a href="/carrito" class="btn btn-outline-light ms-3">
+                        <i class="fas fa-shopping-cart"></i> Carrito <i
+                            class="bi bi-{{ cart | length }}-circle-fill"></i>
+                    </a>
+
+                    {% endif %}
+
+            </div>
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item dropdown mx-2">
+                    <a class="nav-link dropdown-toggle text-grey" href="#" role="button" , id="profileDropdown"
+                        data-bs-toggle="dropdown" aria-hidden="false">
+                        Cuenta
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+
+                        {% if current_user.is_authenticated %}
+
+                        {% if current_user.rol_id == 1 %}
+
+                        <li><a class="dropdown-item" href="/adminvista">Adminstración <i
+                                    class="bi bi-person-fill-gear"></i></a></li>
+
+                        <li><a class="dropdown-item" href="/logout">Salir de la sesión <i
+                                    class="fa-solid fa-right-from-bracket"></i></a>
+
+
+
+
+                            {% elif current_user.rol_id == 2 %}
+
+                        <li><a class="dropdown-item" href="/empleado">Gestión contactos <i
+                                    class="bi bi-person-fill-gear"></i></a></li>
+
+                        <li><a class="dropdown-item" href="/logout">Salir de la sesión <i
+                                    class="fa-solid fa-right-from-bracket"></i></a>
+
+                            {% else %}
+                        <li><a class="dropdown-item" href="/profile">Perfil <i class="fa-solid fa-user"></i></a></li>
+
+                </li>
+                <li><a class="dropdown-item" href="/logout">Salir de la sesión <i
+                            class="fa-solid fa-right-from-bracket"></i></a>
+                </li>
+
+
+                {% endif %}
+
+
+
+                {% else %}
+
+                <li><a class="dropdown-item" href="/login">Iniciar Sesión <i
+                            class="fa-solid fa-right-to-bracket"></i></a>
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+            </li>
+            </ul>
+        </div>
+    </nav>
+
+    {% for message in get_flashed_messages() %}
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 5px;">
+        <strong>{{ message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+    </div>
+    {% endfor %}
+
+    {% block body %}
+
+    {% endblock %}
+
+
+
+    <!-- Footer -->
+    <footer class="text-center" id="contacto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3 offset-md-2">
+                    <h5>Contacto</h5>
+                    <p><i class="fas fa-envelope"></i> peluchesyakky@gmail.com</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Redes Sociales</h5>
+                    <a href="https://www.facebook.com/profile.php?id=100093166902343" class="text-white me-3 ps-3"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/peluches_yakky/" class="text-white me-3"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/573135484798?text=¡Hola!%20Quisiera%20más%20información%20sobre%20sus%20peluches."
+                        class="text-white me-3 ps-1" style="width: 60px; height: 60px;">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+                <!-- <div class="col-md-4 mb-3">
+                    <h5>Newsletter</h5>
+                    <form>
+                        <input type="email" class="form-control mb-2" placeholder="Tu correo">
+                        <button class="btn btn-outline-light">Suscribirse</button>
+                    </form>
+                </div> -->
+            </div>
+            <hr>
+            <p>&copy; 2025 Peluches Yakky. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Al final del body, en este orden exacto -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/funciones.js') }}"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("/sw.js", {
+                scope: '/'  // Scope en raíz
+            }).then(registration => {
+                console.log('✅ SW con scope completo:', registration.scope);
+            });
+        }
+
+        // Mostrar botón de instalación
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('Usuario instaló la PWA');
+                }
+                deferredPrompt = null;
+            });
+        });
+    </script>
+
+
+</body>
+
+</html>
