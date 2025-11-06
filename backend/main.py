@@ -1,4 +1,4 @@
-from Backend.src import create_app, db
+from src import create_app, db
 from flask_migrate import Migrate
 
 app = create_app()

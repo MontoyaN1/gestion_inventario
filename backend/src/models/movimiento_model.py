@@ -1,6 +1,4 @@
-from Backend.src import db
-from werkzeug.security import check_password_hash, generate_password_hash
-from flask_login import UserMixin
+from ...src import db
 from datetime import datetime
 
 

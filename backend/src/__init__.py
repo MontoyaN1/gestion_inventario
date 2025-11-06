@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from dotenv import load_dotenv
@@ -18,27 +18,26 @@ ADMIN_NAME = "Admin"
 ADMIN_EMAIL = "admin@gestion.com"
 ADMIN_PASS = "TSzxvDl1nQ"
 
+
 def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "8=F&9w4Z{F"
-    
-    # Cambia SQLite por MySQL
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    
-    db.init_app(app)
 
-    @app.errorhandler(404)
-    def error_404(error):
-        return render_template("error_404.html")
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    )
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    db.init_app(app)
 
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
 
     from sqlalchemy_utils import database_exists, create_database
+    from .routes.auth_route import auth_bp
 
-    app.register_blueprint("admin", url_prefix="/")
+    app.register_blueprint(auth_bp, url_prefix="/")
 
     with app.app_context():
         try:
@@ -46,17 +45,19 @@ def create_app():
             if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
                 create_database(app.config["SQLALCHEMY_DATABASE_URI"])
                 print("Base de datos MySQL creada")
-            
+
             # Crear tablas y admin
             db.create_all()
             create_admin()
-            
+
         except Exception as e:
             print(f"Error inicializando base de datos: {e}")
 
     return app
 
+
 __all__ = ["login_required", "rol_required", "roles_required", "db", "login_manager"]
+
 
 def create_admin():
     """Crear admin después de los roles"""

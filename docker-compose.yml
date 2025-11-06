@@ -22,19 +22,22 @@ services:
     environment:
       - FLASK_ENV=development
       - FLASK_DEBUG=1
+      - FLASK_APP=main.py
     command: flask run --host=0.0.0.0 --port=5000 --reload --debugger --with-threads
 
   database:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}  # Cambia en .env
+      MYSQL_DATABASE: ${DB_NAME}                # Añade esto
+      MYSQL_USER: ${DB_USER}                    # ej: 'inventory_user'
+      MYSQL_PASSWORD: ${DB_PASSWORD}            # contraseña del usuario app
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password --innodb-buffer-pool-size=128M --max-connections=50
+
 
   redis:
     image: redis:7-alpine

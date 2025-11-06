@@ -1,5 +1,4 @@
-from Backend.src import db
-from flask_login import UserMixin
+from ...src import db
 from datetime import datetime
 
 
