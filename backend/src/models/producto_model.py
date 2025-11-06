@@ -1,4 +1,4 @@
-from ...src import db
+from src import db
 from datetime import datetime
 
 
@@ -12,8 +12,6 @@ class Producto(db.Model):
     categoria = db.Column(db.String(100))
     activo = db.Column(db.Boolean, default=True)
     fecha_creacion = db.Column(db.DateTime(), default=datetime.utcnow)
-
-    movimientos = db.relationship("Movimiento", backref="producto", lazy=True)
 
     def __str__(self):
         return f"Producto {self.nombre} (Stock: {self.stock_actual})"

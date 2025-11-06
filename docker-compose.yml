@@ -23,15 +23,21 @@ services:
       - FLASK_ENV=development
       - FLASK_DEBUG=1
       - FLASK_APP=main.py
-    command: flask run --host=0.0.0.0 --port=5000 --reload --debugger --with-threads
+    command: >
+      sh -c "echo '⏳ Esperando a que la base de datos esté lista...' &&
+             sleep 25 &&
+             echo '🚀 Iniciando aplicación...' &&
+             flask run --host=0.0.0.0 --port=5000 --reload --debugger --with-threads"
+    depends_on:
+      - database  
 
   database:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}  # Cambia en .env
-      MYSQL_DATABASE: ${DB_NAME}                # Añade esto
-      MYSQL_USER: ${DB_USER}                    # ej: 'inventory_user'
-      MYSQL_PASSWORD: ${DB_PASSWORD}            # contraseña del usuario app
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD} 
+      MYSQL_DATABASE: ${DB_NAME}               
+      MYSQL_USER: ${DB_USER}                    
+      MYSQL_PASSWORD: ${DB_PASSWORD}           
     ports:
       - "${DB_PORT}:3306"
     volumes:

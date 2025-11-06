@@ -1,4 +1,4 @@
-from ...src import db
+from src import db
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
 from datetime import datetime
@@ -6,7 +6,7 @@ from datetime import datetime
 
 class Usuario(db.Model, UserMixin):
     id_usuario = db.Column(db.Integer, primary_key=True)
-    rol = db.Column(db.String(100), default="Cliente")
+    rol_id = db.Column(db.String(100), default="Cliente")
     email = db.Column(db.String(100), unique=True)
     username = db.Column(db.String(100))
     password_hash = db.Column(db.String(150))

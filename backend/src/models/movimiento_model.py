@@ -1,4 +1,4 @@
-from ...src import db
+from src import db
 from datetime import datetime
 
 
@@ -18,4 +18,4 @@ class Movimiento(db.Model):
     
     # Relaciones
     producto = db.relationship("Producto", backref="movimientos")
-    usuario = db.relationship("Usuario", backref="movimientos")
+   
