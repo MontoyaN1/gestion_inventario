@@ -11,6 +11,7 @@ class Producto(db.Model):
     precio = db.Column(db.Float)
     categoria = db.Column(db.String(100))
     activo = db.Column(db.Boolean, default=True)
+    ruta_imagen = db.Column(db.String(100), nullable=False)
     fecha_creacion = db.Column(db.DateTime(), default=datetime.utcnow)
 
     def __str__(self):
