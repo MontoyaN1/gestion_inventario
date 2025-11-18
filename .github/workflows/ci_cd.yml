@@ -163,9 +163,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Deploy to Render
+    - name: Deploy to Easypanel
       env:
-        RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        RENDER_DEPLOY_HOOK: ${{ secrets.EASYPANEL_WEBHOOK }}
       run: |
-        echo "🚀 Desplegando a Render..."
-        curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
+        echo "🚀 Desplegando a Easypanel Compose..."
+        curl -fsS -X POST "$EASYPANEL_WEBHOOK"
