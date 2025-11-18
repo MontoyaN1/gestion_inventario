@@ -1,11 +1,10 @@
 
-const API_URL = 'http://localhost:5000/auth';
 
 export const authService = {
   // Login
   async login(email, password) {
     try {
-      const response = await fetch(`${API_URL}/login`, {
+      const response = await fetch(`/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,7 +27,7 @@ export const authService = {
   // Registro
   async register(userData) {
     try {
-      const response = await fetch(`${API_URL}/registro`, {
+      const response = await fetch(`/auth/registro`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +50,7 @@ export const authService = {
   // Logout
   async logout() {
     try {
-      const response = await fetch(`${API_URL}/logout`, {
+      const response = await fetch(`/auth/logout`, {
         method: 'POST',
         credentials: 'include'
       });

@@ -1,52 +1,63 @@
-version: '3.8'
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+    container_name: gestion_frontend
     ports:
       - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=development
+      NODE_ENV: development
     command: npm run dev
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+    container_name: gestion_backend
     ports:
       - "5000:5000"
     volumes:
       - ./backend:/app
+      - ./images:/app/images 
     env_file:
       - .env
     environment:
-      - FLASK_ENV=development
-      - FLASK_DEBUG=1
-      - FLASK_APP=main.py
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
+      FLASK_APP: main.py
     command: >
-      sh -c "echo '⏳ Esperando a que la base de datos esté lista...' &&
-             sleep 25 &&
-             echo '🚀 Iniciando aplicación...' &&
-             flask run --host=0.0.0.0 --port=5000 --reload --debugger --with-threads"
+      sh -c "
+        echo '⏳ Esperando a que la base de datos esté lista...' &&
+        sleep 10 &&
+        echo '🚀 Iniciando aplicación...' &&
+        flask run --host=0.0.0.0 --port=5000 --reload --debugger --with-threads
+      "
     depends_on:
-      - database  
+      - database
 
   database:
     image: mysql:8.0
+    container_name: gestion_db
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD} 
-      MYSQL_DATABASE: ${DB_NAME}               
-      MYSQL_USER: ${DB_USER}                    
-      MYSQL_PASSWORD: ${DB_PASSWORD}           
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "${DB_PORT}:3306"
+      - "${DB_PORT:-3306}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password --innodb-buffer-pool-size=128M --max-connections=50
-
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --innodb-buffer-pool-size=128M
+      --max-connections=50
 
   redis:
     image: redis:7-alpine
+    container_name: gestion_redis
     ports:
       - "6379:6379"
     volumes:
@@ -55,15 +66,17 @@ services:
 
   phpmyadmin:
     image: phpmyadmin:latest
+    container_name: gestion_phpmyadmin
     ports:
       - "8080:80"
     environment:
-      - PMA_HOST=database
-      - PMA_PORT=3306
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      PMA_HOST: database
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     depends_on:
       - database
 
 volumes:
   mysql_data:
   redis_data:
+

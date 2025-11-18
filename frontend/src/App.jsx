@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ProductProvider } from './context/ProductoContext';
+import { MovimientoProvider } from './context/MovimientoConstext';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
-import Dashboard from './components/Dashboard/Dashboard';
 import './App.css';
+import AdminProductos from './components/Admin/AdminProductos';
+import ClientDashboard from './components/Cliente/ClienteDashboard';
 
 const AuthApp = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,19 +21,31 @@ const AuthApp = () => {
     );
   }
 
-  if (isAuthenticated) {
-    return <Dashboard user={user} />;
+  if (isAuthenticated && user) {
+
+    if (user.rol_id == 1) {
+      return <AdminProductos user={user} />
+
+    } else if (user.rol_id == 2) {
+      return <ClientDashboard user={user} />
+
+    }
+
   }
 
-  return isLogin ? 
-    <Login onToggleForm={() => setIsLogin(false)} /> : 
+  return isLogin ?
+    <Login onToggleForm={() => setIsLogin(false)} /> :
     <Register onToggleForm={() => setIsLogin(true)} />;
 };
 
 function App() {
   return (
     <AuthProvider>
-      <AuthApp />
+      <ProductProvider>
+        <MovimientoProvider>
+          <AuthApp />
+        </MovimientoProvider>
+      </ProductProvider>
     </AuthProvider>
   );
 }

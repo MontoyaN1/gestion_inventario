@@ -16,6 +16,6 @@ class Movimiento(db.Model):
     
     fecha_movimiento = db.Column(db.DateTime(), default=datetime.utcnow)
     
-    # Relaciones
+   
     producto = db.relationship("Producto", backref="movimientos")
    

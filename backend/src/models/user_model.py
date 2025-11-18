@@ -6,7 +6,7 @@ from datetime import datetime
 
 class Usuario(db.Model, UserMixin):
     id_usuario = db.Column(db.Integer, primary_key=True)
-    rol_id = db.Column(db.String(100), default="Cliente")
+    rol_id = db.Column(db.String(100), default=2)
     email = db.Column(db.String(100), unique=True)
     username = db.Column(db.String(100))
     password_hash = db.Column(db.String(150))
