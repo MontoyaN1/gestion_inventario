@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     allowedHosts: [
-      'gestion-inventario-gestion-inventario.j1g1p3.easypanel.host'
+      'gestion-inventario-gestion.j1g1p3.easypanel.host'
     ],
     port: 4000,
     host: true,
