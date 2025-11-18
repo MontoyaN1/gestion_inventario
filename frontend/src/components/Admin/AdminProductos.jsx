@@ -176,7 +176,7 @@ const AdminProducts = () => {
     <div className="admin-products">
       <div className="products-header">
         <div className="header-content">
-          <h1>Gestión de Productos en app para las UTS</h1>
+          <h1>Gestión de Productos</h1>
           <p className="header-subtitle">Administra el inventario de productos</p>
         </div>
         <button
